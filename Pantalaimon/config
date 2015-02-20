@@ -1,0 +1,5 @@
+input directory:                      /home/user/Pictures
+output directory:                     /home/user/Daemonised
+delete from input:                    yes
+rename at copy:                       yes
+width of pic in gallery (original=0): 300 

@@ -2,6 +2,7 @@ import os
 import subprocess
 import shutil
 import hashlib
+import time
 from datetime import datetime as dt
 
 imageExtension = ('.jpg','.JPG','.jpeg','.JPEG','.bmp','.BMP','.png','.PNG','.gif','.GIF','.tiff','.TIFF') #list of extensions we recognise as images
@@ -51,6 +52,12 @@ def copyPictures(picturePath,daemonPath,deleteFromInput,doRename,logFile):
                     if not foldername.endswith("/"): #make sure the absolute path to the folder ends with one, and only one, slash
                         foldername += "/"
                     listOfPics.append(foldername+f) #adds the absolute path to the picture in the list of pictures
+    
+    toCopy = len(listOfPics)
+    if toCopy > 1:
+        logFile.write(now()+" "+str(toCopy)+" images to copy\n")
+    else:
+        logFile.write(now()+" "+str(toCopy)+" image to copy\n")
 
     if listOfPics!=[]: #if there are pictures to sort
                 
@@ -115,10 +122,11 @@ def copyPictures(picturePath,daemonPath,deleteFromInput,doRename,logFile):
                 # Finally compare original MD5 with freshly calculated, and remove copied file if error
                 if original_md5 != md5_returned:
                     #WRITE IN LOG
-                    logFile.write(now()+f+" ERROR WHILE COPYING.\n")
+                    logFile.write(now()+f+" ERROR WHILE COPYING\n")
                     os.remove(newName)
                 else:
-                    #an image has been copied 
+                    #an image has been copied
+                    logFile.write(now()+f+" copied\n")
                     anythingNew += 1
                             
                 if deleteFromInput: #remove original file if needed
@@ -130,8 +138,8 @@ def copyPictures(picturePath,daemonPath,deleteFromInput,doRename,logFile):
         #remove the now supposedly empty (unless a copy has failed) subdirectories
         if(deleteFromInput):
             for folder in sorted(os.walk(picturePath),key=minuslen): #list of all the paths, sorted by length (longest first, since they are the deepest in the structure)
-                if not os.listdir(folder): #checks that folder is empty
-                    os.system("rm -rf "+folder)
+                if ((not os.listdir(folder[0])) or (all([filename.startswith(".") for filename in os.listdir(folder[0])]))): #checks that folder is empty, or at least only contains hidden files
+                    os.system("rm -rf "+folder[0])
             
         if not os.path.exists(picturePath):
             os.makedirs(picturePath)
@@ -223,7 +231,7 @@ def launchEverything(logFile):
     if not daemonPath.endswith("/"): #make sure the absolute path to the folder ends with one, and only one, slash
         daemonPath += "/"
     logFile = open(logFile,"a+")
-    
+    logFile.write(now()+" Launching\n")
     #try to copy pictures. Return true if any picture has been copied.
     anythingNew = copyPictures(picturePath,daemonPath,deleteFromInput,doRename,logFile)
     if anythingNew:

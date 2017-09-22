@@ -36,7 +36,7 @@ How to run it
 
 Open your favorite console and follow the instructions:
 
-   | Daemon | Cron
+--- | Daemon | Cron
 ---- | -------- | ---
 Start | Type **python /path/to/folder/Daemon.py start** | Type **crontab -e** and append the following line to the file that has just opened (spacing matters): __* * * * * python /path/to/folder/Cron.py__
 Stop | Type **python /path/to/folder/Daemon.py stop** | Type **crontab -e** and remove the line you previously added.

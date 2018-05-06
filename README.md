@@ -29,7 +29,7 @@ Installing
 - Clone the directory in a folder of your choice
 - Edit Pantalaimon/config so that it fits to your needs
 - Move Pantalaimon folder to /tmp
-- Install all relevant libraries through pip: daemon
+- Install all relevant libraries through pip: daemon, exiftool
 
 How to run it
 -------------
